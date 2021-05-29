@@ -4,6 +4,10 @@ let initialData = {
   name: "",
   email: "",
   password: "",
+  cars: "",
+  bike: Boolean,
+  bikeError: "",
+  carsError: "",
   nameError: "",
   emailError: "",
   passwordError: ""
@@ -15,6 +19,7 @@ const Individual = () => {
     let nE = "";
     let eE = "";
     let pE = "";
+    let cE = "";
 
     if (!formData.name) {
       nE = "name Can't Be empty";
@@ -25,13 +30,17 @@ const Individual = () => {
     if (formData.password.length < 5) {
       pE = "password should be more than 5";
     }
-    if (nE || eE || pE) {
+    if (!formData.cars) {
+      cE = "one car required";
+    }
+    if (nE || eE || pE || cE) {
       setform((prevData) => {
         return {
           ...prevData,
           nameError: nE,
           emailError: eE,
-          passwordError: pE
+          passwordError: pE,
+          carsError: cE
         };
       });
       return false;
@@ -49,9 +58,13 @@ const Individual = () => {
     }
   };
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const isCheckbox = e.target.type === "checkbox";
+    console.log("event", e.target.value, e.target.type);
+    const { name } = e.target;
+    const val = isCheckbox ? !e.target.value : e.target.value;
+
     setform((prevValue) => {
-      return { ...prevValue, [name]: value };
+      return { ...prevValue, [name]: val };
     });
   };
   useEffect(() => {
@@ -94,6 +107,33 @@ const Individual = () => {
             value={formData.password}
           />
           <span>{formData.passwordError}</span>
+        </div>
+
+        <div>
+          <label for="cars">Choose a car:</label>
+          <select
+            name="cars"
+            id="cars"
+            value={formData.cars}
+            onChange={handleChange}
+          >
+            <option value="">No Option</option>
+            <option value="saab">Saab</option>
+            <option value="mercedes">Mercedes</option>
+            <option value="audi">Audi</option>
+          </select>
+          <span>{formData.carsError}</span>
+        </div>
+        <div>
+          <input
+            type="checkbox"
+            id="bike"
+            name="bike"
+            value={formData.bike}
+            onChange={handleChange}
+          />
+          <label for="bike"> I have a bike</label>
+          <span>{formData.bikeError}</span>
         </div>
         <button type="submit">Submit</button>
       </form>
